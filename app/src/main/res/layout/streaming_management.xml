@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheetDashBoardLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="4dp"
+        android:background="@drawable/bottom_sheet_back"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="취소"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:textStyle="normal"
+                android:gravity="start"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/resolution_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="방송 관리자"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/other_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="15dp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+            <LinearLayout
+                android:id="@+id/broadcast_box"
+                android:layout_height="70dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/actioninfo_box"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintVertical_bias="0.1"
+                app:layout_constraintVertical_chainStyle="packed"
+                android:background="@drawable/stream_state_bottomsheet_back"
+                android:layout_marginStart="@dimen/grid_6"
+                android:layout_marginEnd="@dimen/grid_6"
+                tools:ignore="MissingConstraints"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/broadcast_value_box"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="6"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/onoff_box"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/onoff_value"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:text="오프라인"
+                            android:layout_gravity="start"
+                            android:textColor="#000000"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:padding="3dp"
+                            android:background="@drawable/stream_off_back"
+                            />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/broadcast_time_value"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="--"
+                        android:layout_gravity="start"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/viewer_value"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="--"
+                        android:layout_gravity="start"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/action_money_value"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="--"
+                        android:layout_gravity="start"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/broadcast_title_box"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    tools:ignore="MissingConstraints"
+                    android:layout_weight="4"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/broadcast"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="방송"
+                        android:layout_gravity="start"
+                        android:textColor="#505050"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/broadcast_time"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="방송 시작"
+                        android:layout_gravity="start"
+                        android:textColor="#505050"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+                    <TextView
+                        android:id="@+id/viewer"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="시청자"
+                        android:layout_gravity="start"
+                        android:textColor="#505050"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/action_money"
+                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:text="경매 금액"
+                        android:layout_gravity="start"
+                        android:textColor="#505050"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/timeinfo_box"
+                    android:layout_height="70dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/actioninfo_box"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintVertical_bias="0.1"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:background="@drawable/stream_state_bottomsheet_back"
+                    android:layout_marginStart="@dimen/grid_6"
+                    android:layout_marginEnd="@dimen/grid_6"
+                    tools:ignore="MissingConstraints"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/timeinfo_value_box"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_weight="6"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/finishtime_value"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:text="--"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/resttime_value"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:text="--"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/timeinfo_title_box"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        tools:ignore="MissingConstraints"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/finishtime"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:text="경매 종료 시간"
+                            android:layout_gravity="start"
+                            android:textColor="#505050"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:id="@+id/resttime"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:text="경매 남은 시간"
+                            android:layout_gravity="start"
+                            android:textColor="#505050"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/chatting_box"
+                    android:layout_height="250dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/actioninfo_box"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintVertical_bias="0.1"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:background="@drawable/stream_state_bottomsheet_back"
+                    android:layout_marginStart="@dimen/grid_6"
+                    android:layout_marginEnd="@dimen/grid_6"
+                    tools:ignore="MissingConstraints"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/chat_title_box"
+                        android:layout_height="40sp"
+                        android:layout_width="match_parent"
+                        android:padding="10sp"
+                        android:background="@drawable/menu_top_back"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/chat_title_tv"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:text="채팅"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:gravity="start"
+                            android:textSize="14dp"
+                            android:textStyle="normal"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/chat_docu_box"
+                        android:layout_height="0dp"
+                        android:layout_width="match_parent"
+                        android:padding="10sp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/chat_send_box"
+                        android:layout_height="40sp"
+                        android:layout_width="match_parent"
+                        android:layout_margin="5sp"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/send_et"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="9"
+                            android:layout_marginEnd="5sp"
+                            android:background="@drawable/chat_send_back"
+                            android:orientation="horizontal"/>
+
+
+                        <LinearLayout
+                            android:id="@+id/chat_sendbtn_box"
+                            android:layout_height="40dp"
+                            android:layout_width="40dp"
+                            android:background="@drawable/stream_close_back"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:id="@+id/send_button"
+                                android:layout_height="25dp"
+                                android:layout_width="25dp"
+                                android:src="@drawable/send_icon"
+                                android:layout_gravity="center"
+                                />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/oction_price_box"
+                    android:layout_height="250dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/actioninfo_box"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintVertical_bias="0.1"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:background="@drawable/stream_state_bottomsheet_back"
+                    android:layout_marginStart="@dimen/grid_6"
+                    android:layout_marginEnd="@dimen/grid_6"
+                    tools:ignore="MissingConstraints"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/oction_price_title_box"
+                        android:layout_height="40sp"
+                        android:layout_width="match_parent"
+                        android:padding="10sp"
+                        android:background="@drawable/menu_top_back"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/oction_price_title_tv"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:text="경매가"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:gravity="start"
+                            android:textSize="14dp"
+                            android:textStyle="normal"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/participant_box"
+                    android:layout_height="250dp"
+                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/actioninfo_box"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintVertical_bias="0.1"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:background="@drawable/stream_state_bottomsheet_back"
+                    android:layout_marginStart="@dimen/grid_6"
+                    android:layout_marginEnd="@dimen/grid_6"
+                    tools:ignore="MissingConstraints"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:id="@+id/participant_title_box"
+                        android:layout_height="40sp"
+                        android:layout_width="match_parent"
+                        android:padding="10sp"
+                        android:background="@drawable/menu_top_back"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/participant_title_tv"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:text="참가자"
+                            android:layout_gravity="start"
+                            android:textColor="@color/black"
+                            android:gravity="start"
+                            android:textSize="14dp"
+                            android:textStyle="normal"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

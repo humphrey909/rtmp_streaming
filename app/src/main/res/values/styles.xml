@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PopupMenuPosition" parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+        <item name="android:dropDownHorizontalOffset">-28dp</item>
+        <item name="android:dropDownVerticalOffset">-5dp</item>
+        <item name="android:height">50dp</item>
+<!--        <item name="android:layout_width">match_parent</item>-->
+    </style>
+
+
+    <style name="PopupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:popupBackground">@drawable/stream_smenu_back</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+</resources>
