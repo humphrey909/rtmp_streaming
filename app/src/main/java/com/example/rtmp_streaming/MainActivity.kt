@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
     SurfaceHolder.Callback, PopupMenu.OnMenuItemClickListener,
     View.OnTouchListener {
 
-    private var rtmpip:String? = "rtmp://43.201.165.228/live/test"; //src
+    private var rtmpip:String? = "rtmp://43.201.165.228/live/test2"; //src
 
     private lateinit var rtmpCamera1: RtmpCamera1
     private lateinit var bStartStop: ImageView
@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
     var initTimer:Int = 0 //타이머 초기화 변수
     var StreamTime:Int = 0 // 스레드로 인해 변화되는 타이머 변수
     var StreamComplete:Int = 0 // 라이브 스트림 종료 여부
-    var Threadstart:Int = 0 //인증번호 전송에서 스레드 처음에만 실행시키기 위해 처음을 알기위한 변수
     var Visible_Time:String = "" //변환된 타이머 시간
 
     private val PERMISSIONS = arrayOf(
@@ -255,12 +254,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                             rtmpCamera1!!.startStream(rtmpip)
                             StreamComplete = 1 // 라이브 스트림 종료 여부
                             //스레드 타이머 시작
-                            if(Threadstart == 0){
-                                StreamTimerThread()
-                                Threadstart = 1
-                            }else{ //변수로 체크하여 멈추는 것 처럼 보이게 할 것
-                                StreamTime = initTimer;// 시간 초기화
-                            }
+                            StreamTimerThread()
 
                         } else {
                             //If you                                    see this all time when you start stream,
@@ -277,6 +271,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                             bLiveArea.setBackgroundResource(R.drawable.stream_start_back);
 
                             bCloseArea.setVisibility(View.VISIBLE) // 닫기 버튼 생성
+                            actioninfoBox.setVisibility(View.VISIBLE)//해당 경매 정보 생성
 
                             //방송 상태 변경
                             onoffValue!!.text = "오프라인";
@@ -288,8 +283,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                                 duration = 1000
                                 start()
                             }
+
+                            StreamComplete = 0
                         }
                     } else { //스트리밍 중일때
+                        StreamComplete = 0
+
                         //밑으로 내리는 애니메이션
                         ObjectAnimator.ofFloat(bFunctionBox, "translationY", 0f).apply {
                             duration = 1000
@@ -308,8 +307,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                         onoffValue!!.setTextColor(Color.parseColor("#000000"))
 
                         rtmpCamera1!!.stopStream()
-
-                        StreamComplete = 0
                     }
                 }
 
@@ -413,14 +410,37 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         }
     }
 
+    //연결 실패하였을 경우
     override fun onConnectionFailedRtmp(reason: String) {
         runOnUiThread {
+
+
+            //실패 이유 : 작성
+
             Toast.makeText(this@MainActivity, "Connection failed. $reason", Toast.LENGTH_SHORT)
                 .show()
             rtmpCamera1!!.stopStream()
 
+            //밑으로 내리는 애니메이션
+            ObjectAnimator.ofFloat(bFunctionBox, "translationY", 0f).apply {
+                duration = 1000
+                start()
+            }
+
             bStartStop.setImageResource(R.drawable.stream_start);
             bLiveArea.setBackgroundResource(R.drawable.stream_start_back);
+
+            bCloseArea.setVisibility(View.VISIBLE) // 닫기 버튼 생성
+            actioninfoBox.setVisibility(View.VISIBLE)//해당 경매 정보 생성
+
+            //방송 상태 변경
+            onoffValue!!.text = "오프라인";
+            onoffValue!!.setBackgroundResource(R.drawable.stream_off_back)
+            onoffValue!!.setTextColor(Color.parseColor("#000000"))
+
+            rtmpCamera1!!.stopStream()
+
+            StreamComplete = 0
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
                 && rtmpCamera1!!.isRecording
@@ -580,14 +600,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         TimerThread = object : Thread() {
             override fun run() {
                 while (true) {
-//                    Log.d("TAG_R", "***3")
+                    Log.d("TAG_R", "***3")
 //                    Log.d("TAG_R", StreamTime.toString())
 
                     try {
                         val msg: Message = TimerHandler!!.obtainMessage()
                         if(StreamComplete == 0){ //종료 되었을때
-                            msg.what = 0;
+                            TimerThread?.interrupt()
+//                            Log.d("TAG_R", "***4")
+                            StreamTime = initTimer// 시간 초기화
+
+                            msg.what = 0
+                            msg.arg1 = StreamTime
                             TimerHandler!!.sendMessage(msg);
+
+//                            Log.d("TAG_R", "***5")
+//                            Log.d("TAG_R", isInterrupted.toString()) //true
+
+                            //인터럽트로 스레드 끝내기.
+                            if(isInterrupted){
+                                Log.d("TAG_R", "인터럽트 발생")
+                                Log.d("TAG_R", "자원정리")
+                                break
+                            }
                         }else{
                             StreamTime++
 
@@ -600,6 +635,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                    }catch(e:InterruptedException){
+                        Log.d("TAG_R", "InterruptedException 인터럽트 발생")
+                        Log.d("TAG_R", "InterruptedException 자원정리")
                     }
                 }
             }
@@ -613,6 +651,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         TimerHandler = object : Handler() {
             override fun handleMessage(msg: Message) {
                 if (msg.what == 1) {
+                    Log.d("TAG_R", "Handler what 1")
                     if (msg.arg2 == 1) {
                         val timerval: String = timertrans(msg.arg1) //변환된 타이머 문자 가져옴
                         broadcastTimeValue.setText(timerval)
@@ -620,6 +659,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                             mainBottomSheetFragment.setTimerOption(Visible_Time)
                         }
                     }
+                }
+                else{
+                    Log.d("TAG_R", "Handler what 0")
+                    val timerval: String = timertrans(msg.arg1)
+                    broadcastTimeValue.setText(timerval)
                 }
             }
         }
