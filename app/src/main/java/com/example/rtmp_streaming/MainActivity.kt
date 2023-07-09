@@ -39,9 +39,6 @@ import com.pedro.rtmp.utils.ConnectCheckerRtmp
 import com.pedro.rtplibrary.rtmp.RtmpCamera1
 import java.io.File
 
-//import kotlin.coroutines.jvm.internal.CompletedContinuation.context
-
-
 class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRtmp,
     SurfaceHolder.Callback, PopupMenu.OnMenuItemClickListener,
     View.OnTouchListener {
@@ -52,18 +49,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
     private lateinit var bStartStop: ImageView
     private lateinit var menuBtn: ImageView
     private lateinit var broadcastTimeValue: TextView
-
-//    private var etWowzaUser: EditText? = null
-//    private var etWowzaPassword: EditText? = null
-//    private var spResolution: Spinner? = null
-//    private var etFps:EditText? = null
-//    private var etAudioBitrate:EditText? = null
-//    private var etVideoBitrate: EditText? = null
-//    private var etSampleRate:EditText? = null
-//    private var rgChannel: RadioGroup? = null
-//    private var cbEchoCanceler: CheckBox? = null
-//    private var cbNoiseSuppressor:CheckBox? = null
-
+    private var onoffValue: TextView? = null
+    private var tvBitrate: TextView? = null
+    private lateinit var mikeBtn: ImageView
 
     //영상 스트림시 보낼 정보
     private var User: String = ""
@@ -78,15 +66,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
     private var NoiseSuppressor: Boolean = true
     private var MaxNum: Int = 100
 
-
-    private var onoffValue: TextView? = null
-    private var tvBitrate: TextView? = null
-
-
     private lateinit var onoffBox: LinearLayout
     private lateinit var broadcastFuncArea: LinearLayout
-
-
 
     private lateinit var bCloseArea: LinearLayout
     private lateinit var bFunctionBox: LinearLayout
@@ -96,9 +77,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
 
     private lateinit var mainBottomSheetFragment:MainBottomSheetFragment
     var MenuOpenTimer:Int = 0 //메뉴 오픈 체크
-
-
-    private lateinit var mikeBtn: ImageView
 
     private var folder: File? = null
     private var currentDateAndTime = ""
@@ -110,8 +88,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
     var StreamComplete:Int = 0 // 라이브 스트림 종료 여부
     var Threadstart:Int = 0 //인증번호 전송에서 스레드 처음에만 실행시키기 위해 처음을 알기위한 변수
     var Visible_Time:String = "" //변환된 타이머 시간
-
-
 
     private val PERMISSIONS = arrayOf(
         Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA,
@@ -146,28 +122,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
 
         broadcastTimeValue = findViewById(R.id.broadcast_time_value)
 
-
-        /////
-//        listPopupWindow = ListPopupWindow(this, null, com.google.android.material.R.attr.listPopupWindowStyle)
-//        listPopupWindow.anchorView = menuBtn
-//
-//        // Set list popup's content
-//        val items = listOf("Item 1", "Item 2", "Item 3", "Item 4")
-//        val adapter = ArrayAdapter(this, R.layout.dropdown_menu, items)
-//        listPopupWindow.setAdapter(adapter)
-//
-//        // Set list popup's item click listener
-//        listPopupWindow.setOnItemClickListener { parent: AdapterView<*>?, view: View?, position: Int, id: Long ->
-//            // Respond to list popup window item click.
-//
-//            // Dismiss popup.
-//            listPopupWindow.dismiss()
-//        }
-//
-//        menuBtn.setOnClickListener { v: View? -> listPopupWindow.show() }
-//        /////
-
-
         broadcastFuncArea = findViewById(R.id.broadcast_func_area) //마이크 카메라 전환 메뉴를 감싸는 뷰
         mainBottomSheetFragment = MainBottomSheetFragment(applicationContext, this) //밑에서 나오는 메뉴 뷰
 
@@ -193,27 +147,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
 
         bStartStop = findViewById(R.id.b_start_stop)
 
-//        bStartStop.setOnClickListener(this)
-//        bRecord = findViewById(R.id.b_record)
-//        bRecord.setOnClickListener(this)
         val switchCamera = findViewById<ImageView>(R.id.switch_cam)
         switchCamera.setOnClickListener(this)
-
-
-
 
         //핸들러 생성
         MakeHandler()
     }
 
-
-    /*
-// popupMenu = PopupMenu( this, broadcastFuncArea, Gravity.NO_GRAVITY, 0, R.style.MyPopupMenu );
-//        popupMenu.getMenu( ).add( 0, 0, 0, "방송 관리자" );
-//        popupMenu.getMenu( ).add( 0, 1, 0, "방송 설정" );
-//        popupMenu.setOnMenuItemClickListener( this );
-    * */
-    //In the showMenu function from the previous example:
     //스트림 메뉴 클릭
     private fun showMenu(v: View) {
         val wrapper = ContextThemeWrapper(this, R.style.PopupMenuStyle)
@@ -276,88 +216,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         }
         return true
     }
-
-    //옆에 메뉴 추가하고 수정해주는 부분
-//    private fun prepareOptionsMenuViews() {
-//        drawerLayout = findViewById(R.id.activity_main)
-////        navigationView = findViewById(R.id.nv_rtp)
-//        navigationView.inflateMenu(R.menu.options_rtmp)
-//        actionBarDrawerToggle = object : ActionBarDrawerToggle(
-//            this, drawerLayout, R.string.rtmp_streamer,
-//            R.string.rtmp_streamer
-//        ) {
-//            override fun onDrawerOpened(drawerView: View) {
-//                actionBarDrawerToggle!!.syncState()
-//                lastVideoBitrate = etVideoBitrate!!.text.toString()
-//            }
-//
-//            override fun onDrawerClosed(view: View) {
-//                actionBarDrawerToggle!!.syncState()
-//                if (lastVideoBitrate != null && lastVideoBitrate != etVideoBitrate!!.text.toString() && rtmpCamera1!!.isStreaming
-//                ) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                        val bitrate = etVideoBitrate!!.text.toString().toInt() * 1024
-//                        rtmpCamera1!!.setVideoBitrateOnFly(bitrate)
-//                        Toast.makeText(
-//                            this@MainActivity,
-//                            "New bitrate: $bitrate",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    } else {
-//                        Toast.makeText(
-//                            this@MainActivity, "Bitrate on fly ignored, Required min API 19",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }
-//        }
-//        drawerLayout.addDrawerListener(actionBarDrawerToggle as ActionBarDrawerToggle)
-//        //checkboxs
-//
-//        //AEC(Acoustic Echo Canceller)는 캡처된 오디오 신호에서 원격 당사자로부터 수신된 신호의 기여도를 제거하는 오디오 전처리기
-//        cbEchoCanceler =
-//            navigationView.getMenu().findItem(R.id.cb_echo_canceler).actionView as CheckBox?
-//
-//        //노이즈 억제(NS)는 캡처된 신호에서 배경 노이즈를 제거하는 오디오 전처리기
-//        cbNoiseSuppressor =
-//            navigationView.getMenu().findItem(R.id.cb_noise_suppressor).actionView as CheckBox?
-//
-//        //radiobuttons
-//        val rbTcp = navigationView.getMenu().findItem(R.id.rb_tcp).actionView as RadioButton?
-//        rgChannel = navigationView.getMenu().findItem(R.id.channel).actionView as RadioGroup?
-//        rbTcp!!.isChecked = true
-//        //spinners - 해상도 생성
-//        spResolution = navigationView.getMenu().findItem(R.id.sp_resolution).actionView as Spinner?
-//        val orientationAdapter =
-//            ArrayAdapter<Int>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item)
-//        orientationAdapter.addAll(*orientations)
-//        val resolutionAdapter =
-//            ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item)
-//        val list: MutableList<String> = ArrayList()
-//        for (size in rtmpCamera1!!.resolutionsBack) {
-//            list.add(size.width.toString() + "X" + size.height)
-//        }
-//        resolutionAdapter.addAll(list)
-//        spResolution!!.adapter = resolutionAdapter
-//        //edittexts - 비트레이트
-//        etVideoBitrate =
-//            navigationView.getMenu().findItem(R.id.et_video_bitrate).actionView as EditText?
-//        etFps = navigationView.getMenu().findItem(R.id.et_fps).actionView as EditText?
-//        etAudioBitrate =
-//            navigationView.getMenu().findItem(R.id.et_audio_bitrate).actionView as EditText?
-//        etSampleRate = navigationView.getMenu().findItem(R.id.et_samplerate).actionView as EditText?
-//
-//        //하드 코딩
-//        etVideoBitrate!!.setText("2500")
-//        etFps!!.setText("30")
-//        etAudioBitrate!!.setText("128")
-//        etSampleRate!!.setText("44100")
-//
-////        etWowzaUser = navigationView.getMenu().findItem(R.id.et_user).actionView as EditText?
-////        etWowzaPassword =
-////            navigationView.getMenu().findItem(R.id.et_password).actionView as EditText?
-//    }
 
     override fun onClick(v: View?) {
         if (v != null) {
@@ -603,7 +461,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                     applicationContext,
                     folder!!.absolutePath + "/" + currentDateAndTime + ".mp4"
                 )
-//                bRecord.setText(R.string.start_record)
                 Toast.makeText(
                     this@MainActivity,
                     "file " + currentDateAndTime + ".mp4 saved in " + folder!!.absolutePath,
@@ -684,34 +541,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         )
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.sub_menu, menu)
-
-        // Get the menu item that you want to center align the title for
-//        val menuItem = menu.findItem(R.id.media_manager)
-//
-//        // Set the custom layout for the menu item
-//        menuItem.actionView = LayoutInflater.from(this).inflate(R.layout.custom_menu_item_layout, null)
-//
-//        // Handle the menu item's click event if needed
-//        menuItem.actionView!!.setOnClickListener {
-//            // Handle the click event here
-//        }
-
-        return true
-    }
-
-
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        menuInflater.inflate(R.menu.menu_items, menu)
-//
-//        val menuItem = menu.findItem(R.id.menu_item_id)
-//        menuItem.actionLayout = R.layout.custom_menu_item_layout
-//
-//        return true
-//    }
-
     //메뉴에서 하위 메뉴 클릭시 동작
     override fun onMenuItemClick(item: MenuItem?): Boolean {
 
@@ -748,61 +577,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
 
     //스레드가 먼저 실행
     fun StreamTimerThread() {
-//        Log.d("TAG_R", "***1")
-
         TimerThread = object : Thread() {
             override fun run() {
-//                Log.d("TAG_R", "***2")
-//                Log.d("TAG_R", StreamTime.toString())
-
                 while (true) {
-
-                    Log.d("TAG_R", "***3")
-                    Log.d("TAG_R", StreamTime.toString())
+//                    Log.d("TAG_R", "***3")
+//                    Log.d("TAG_R", StreamTime.toString())
 
                     try {
                         val msg: Message = TimerHandler!!.obtainMessage()
                         if(StreamComplete == 0){ //종료 되었을때
                             msg.what = 0;
-//                            msg.obj = "timer";
                             TimerHandler!!.sendMessage(msg);
                         }else{
                             StreamTime++
 
-//                            Log.d("타이머 숫자", StreamTime.toString())
                             msg.what = 1
                             // msg.obj = "timer";
                             msg.arg1 = StreamTime
                             msg.arg2 = StreamComplete
                             TimerHandler?.sendMessage(msg)
                             sleep(1000)
-
-//
-
-
                         }
-
-
-//                        if (StreamTime < 0) { //타이머 끝났을때
-//                            val msg: Message = TimerHandler.obtainMessage()
-//                            msg.what = 2
-//                            msg.obj = "timer"
-//                            TimerHandler.sendMessage(msg)
-//
-//                            //TimerThread.interrupt();
-//                        } else if (StreamComplete == 1) { //종료 되었을때
-//
-//
-////                            Message msg = TimerHandler.obtainMessage();
-////                            msg.what = 3;
-////                            msg.obj = "timer";
-////                            TimerHandler.sendMessage(msg);
-//
-//                            //TimerThread.interrupt();
-//                        } else {
-//                            StreamTime--
-
-
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -820,43 +615,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                 if (msg.what == 1) {
                     if (msg.arg2 == 1) {
                         val timerval: String = timertrans(msg.arg1) //변환된 타이머 문자 가져옴
-
-                        //idtext.setText("이메일 "+timerval);
                         broadcastTimeValue.setText(timerval)
-//                        Log.d("타이머 숫자", timerval)
-
-
                         if(MenuOpenTimer == 1){
                             mainBottomSheetFragment.setTimerOption(Visible_Time)
                         }
                     }
                 }
-
-//                if (msg.what == 1) {
-//                    if (msg.arg2 == 2) { //인증번호가 틀렸을때
-//
-//                        //안먹었음...
-//                        Log.d("444", Integer.toString(msg.arg2))
-//                        certifichktext.setVisibility(View.VISIBLE)
-//                        certifichktext.setText("인증번호가 맞지 않습니다.")
-//                    } else {
-//                        certifichktext.setVisibility(View.GONE)
-//                    }
-//                    emailsendbtn.setText("재전송")
-//                    certifibox.setVisibility(View.VISIBLE) //인증박스 보이게 처리
-//                    val timerval: String = timertrans(msg.arg1) //변환된 타이머 문자 가져옴
-//
-//                    //idtext.setText("이메일 "+timerval);
-//                    certifitimer.setText(timerval)
-//                    Log.d("타이머 숫자", timerval)
-//                } else if (msg.what == 2) {
-//                    emailsendbtn.setText("전송")
-//                    certifibox.setVisibility(View.GONE) //인증박스 안보이게 처리
-//                } else if (msg.what == 3) {
-//                    //emailsendbtn.setText("인증 완료");
-//                    //emailsendbtn.setBackgroundResource(R.drawable.btndesign1);
-//                    //certifibox.setVisibility(View.GONE); //인증박스 안보이게 처리
-//                }
             }
         }
     }

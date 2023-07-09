@@ -24,9 +24,6 @@
         android:theme="@style/Theme.Rtmp_streaming"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity_2"
-            android:exported="false"/>
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RtmpNew_streaming"
