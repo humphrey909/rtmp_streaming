@@ -38,13 +38,14 @@ import com.pedro.encoder.input.video.CameraOpenException
 import com.pedro.rtmp.utils.ConnectCheckerRtmp
 import com.pedro.rtplibrary.rtmp.RtmpCamera1
 import java.io.File
+import java.util.Date
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRtmp,
     SurfaceHolder.Callback, PopupMenu.OnMenuItemClickListener,
     View.OnTouchListener {
 
-    private var rtmpip:String? = "rtmp://43.201.165.228/live/test2"; //src
-
+    private var StreamKey:String? = "TGRT-LmGf-wfVX-x8Ax-7jPw"
+    private var rtmpip:String? = "rtmp://live.reptimate.store/live/"; //src
     private lateinit var rtmpCamera1: RtmpCamera1
     private lateinit var bStartStop: ImageView
     private lateinit var menuBtn: ImageView
@@ -114,8 +115,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         surfaceView.setOnTouchListener(this)
         rtmpCamera1 = RtmpCamera1(surfaceView, this)
 
-//        prepareOptionsMenuViews() //옵션설정 목록, 공간 만들어주는 부분
-
         menuBtn = findViewById(R.id.menu_btn)
         menuBtn.setOnClickListener(this)
 
@@ -151,6 +150,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
 
         //핸들러 생성
         MakeHandler()
+
+//        setStreamKey()
+
+        rtmpip += StreamKey
+        Log.d("TAG_R", "----setStreamKey----")
+        Log.d("TAG_R", StreamKey.toString())
+        Log.d("TAG_R", rtmpip.toString())
+        Log.d("TAG_R", "----setStreamKey----")
     }
 
     //스트림 메뉴 클릭
@@ -222,6 +229,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
                 R.id.broadcast_live_area -> {
                     Log.d("TAG_R", "b_start_stop: ")
                     if (!rtmpCamera1.isStreaming) { //스트리밍 중이 아닐때
+
 //                        bStartStop.text = resources.getString(R.string.stop_button)
                         bStartStop.setImageResource(R.drawable.stream_stop)
                         bLiveArea.setBackgroundResource(R.drawable.stream_stop_back)
@@ -700,5 +708,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ConnectCheckerRt
         Visible_Time = "$hourVal:$minuteVal:$secondVal"
 
         return "$hourVal:$minuteVal:$secondVal"
+    }
+
+    fun setStreamKey() {
+        StreamKey = ""
+        val len: Int = 5
+        for(i in 1..len){
+            val date = Date()
+            var charset = ('0'..'9') + ('a'..'z') + ('A'..'Z') + (date.time)
+            var rangeRandom = List(4) {charset.random()}
+                .joinToString("")
+            StreamKey += rangeRandom
+            if(i<len){
+                StreamKey+="-"
+            }
+        }
+        Log.d("StreamKey", StreamKey.toString())
     }
 }
